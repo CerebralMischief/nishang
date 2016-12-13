@@ -1,3 +1,61 @@
+0.7.0
+- Added Invoke-SSIDExfil to the Gather directory. 
+- Gupt-Backdoor can now receive commands from SSID names on targets having PowerShellv3 and above.
+ - Added ConverTo-ROT13 to the Utility directory.
+0.6.9
+- Get-PassHashes now uses Reflection. Thanks to Zer1t0 on GitHub.
+- Added Invoke-Mimikittenz by Jamieson O'Reilly
+0.6.8
+- Added Out-SCF in the Client directory.
+0.6.7
+- Added Out-JS.ps1 in the Client directory.
+- Added Out-SCT.ps1 in the Client directory.
+- Added Invoke-JSRatRegsvr.ps1 in the Shells directory.
+- Added Out-RundllCommand in the Execution directory.
+0.6.6
+- Added Invoke-JSRatRundll in the Shells directory.
+0.6.5
+- Updated Out-Word, Out-Excel, Out-HTA and Out-CHM. Now, scripts can directly be used as a payload.
+- Updated Out-Word and Out-Excel. If a new document is now generated it tries to trick the target in enabling macros.
+- Out-HTA uses inline VBScript now. A separate VBScirpt is not generated anymore.
+0.6.4
+- Added ActiveDirecotry directory.
+- Added Get-UnConstrained.ps1 to the ActiveDirectory directory.
+- Added Invoke-Mimikatz (mimikatz version 2.1 alpha 17/02//2016) to the Gather Directory.
+0.6.3
+- Added Invoke-Interceptor to the MITM directory.
+0.6.2
+- Added support for dumping cleartext credentials from RDP sessions for Invoke-MimikatzWfigestDowngrade.
+0.6.1
+- Added Show-TargetScreen to the Gather directory.
+0.6.0
+- Added Invoke-PsUACme to the Escalation directory.
+0.5.9
+- Added Get-PassHints to the Gather directory.
+- Added Out-WebQuery and Get-PassHints to Powerpreter.
+0.5.8
+- Added Out-WebQuery to the Client directory.
+- Added Start-CaptureServer to the Utility directory.
+0.5.7
+- Invoke-PoshRatHttps does not install root certificate anymore and certificate pinning is used.
+- Added a disclaimer.
+- Minor bugs in Powerpreter are fixed.
+- Updates to Antak. Authentication and ability to execute SQL Queries added.
+- Name of Do-Exfiltration changed in HTTP-Backdoor, DNS_TXT_Pwnage and Execute-On-Time
+- Removed hard coded credentials from Invoke-PSGcat.ps1 and Invoke-PSGcat in Powerpreter. So embarrassing!
+0.5.6
+- Added Invoke-PowerShellIcmp to the Shells directory.
+- Adjusted buffer for Invoke-PowerarShellTcp and Invoke-PowerShellUdp and one liners to show larger output.
+0.5.5
+- Added Invoke-PowerShellWmi to the Shells directory. 
+0.5.4
+- Added Invoke-PoshRatHttps, Invoke-PosRatHttp and Remove-PoshRat to the Shells directory.
+0.5.3
+- Added Invoke-PowerShellUdp and Invoke-PowerShellUdpOneLiner to Shells directory.
+0.5.2
+- Added Invoke-PowerShellTcp and Invoke-PowerShellTcpOneLiner to Shells directory.
+0.5.1
+- Added Invoke-MimikatzWfigestDowngrade to Gather directory.
 0.5.0.1
 - Updated Powerpreter by adding Invoke_NetworkRelay and Gcat.
 0.5.0

