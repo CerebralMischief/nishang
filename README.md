@@ -54,6 +54,7 @@ C:\Users\target> powershell -e [encodedscript]
 
 If the scripts still get detected changing the function and parameter names and removing the help content will help.
 
+In case Windows 10's AMSI is still blocking script execution, see this blog: http://www.labofapenetrationtester.com/2016/09/amsi.html
 
 ####Scripts
 Nishang currently contains the following scripts and payloads.
@@ -92,6 +93,15 @@ A backdoor which can use Windows screen saver for remote command and script exec
 [Invoke-ADSBackdoor](https://github.com/samratashok/nishang/blob/master/Backdoors/Invoke-ADSBackdoor.ps1)
 
 A backdoor which can use alternate data streams and Windows Registry to achieve persistence. 
+
+[Add-RegBackdoor](https://github.com/samratashok/nishang/blob/master/Backdoors/Add-RegBackdoor.ps1)
+
+A backdoor which uses well known Debugger trick to execute payload with Sticky keys and Utilman (Windows key + U). 
+
+#####Bypass
+[Invoke-AmsiBypass](https://github.com/samratashok/nishang/blob/master/Bypass/Invoke-AmsiBypass.ps1)
+
+Implementation of publicly known methods to bypass/avoid AMSI.
 
 #####Client
 [Out-CHM](https://github.com/samratashok/nishang/blob/master/Client/Out-CHM.ps1)
@@ -222,6 +232,14 @@ Connect back and Stream target screen using MJPEG.
 
 Load mimikatz in memory. Updated and with some customisation.
 
+[Invoke-Mimikittenz](https://github.com/samratashok/nishang/blob/master/Gather/Invoke-Mimikittenz.ps1)
+
+Extract juicy information from target process (like browsers) memory using regex.
+
+[Invoke-SSIDExfil](https://github.com/samratashok/nishang/blob/master/Gather/Invoke-SSIDExfil.ps1)
+
+Exfiltrate information like user credentials, using WLAN SSID.
+
 #####MITM
 [Invoke-Interceptor](https://github.com/samratashok/nishang/blob/master/MITM/Invoke-Interceptor.ps1)
 
@@ -348,9 +366,20 @@ Decode and decompress a script or string from Invoke-Encode.
 
 Run a web server which logs Basic authentication and SMB hashes.
 
+[ConvertTo-ROT13](https://github.com/samratashok/nishang/blob/master/Utility/ConvertTo-ROT13.ps1)
+
+Encode a string to ROT13 or decode a ROT13 string.
+
+[Out-DnsTxt](https://github.com/samratashok/nishang/blob/master/Utility/Out-DnsTxt.ps1)
+
+Generate DNS TXT records which could be used with other scripts.
+
 [Base64ToString]
+
 [StringToBase64]
+
 [ExetoText]
+
 [TexttoExe]
 
 
